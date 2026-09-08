@@ -48,6 +48,7 @@ export function AuthModal({ isOpen, onClose, message, onSuccess }: AuthModalProp
   };
 
   const handleGoogleSignIn = async () => {
+    setError(null);
     try {
       const supabase = createClient();
       const origin = window.location.origin;
@@ -57,10 +58,20 @@ export function AuthModal({ isOpen, onClose, message, onSuccess }: AuthModalProp
           redirectTo: `${origin}/auth/callback?next=/dashboard`,
         },
       });
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('not enabled') || error.message.includes('validation_failed')) {
+          setError('Google Sign-in is not enabled in your Supabase project yet. Please use the Email Magic Link below to log in, or toggle Google ON in Supabase Dashboard -> Authentication -> Providers.');
+          return;
+        }
+        throw error;
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Google authentication failed.';
-      setError(msg);
+      if (msg.includes('not enabled') || msg.includes('validation_failed')) {
+        setError('Google Sign-in is not enabled in your Supabase project yet. Please use the Email Magic Link below, or toggle Google ON in Supabase Dashboard -> Authentication -> Providers.');
+      } else {
+        setError(msg);
+      }
     }
   };
 

@@ -13,11 +13,38 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'StatementToExcel - Convert Messy Bank Statements into Clean Excel in 3 Seconds',
+  title: 'StatementToExcel - Convert Bank Statements to Excel & CSV in Seconds',
   description:
-    'Extract tabular bank statements, invoices, and credit card PDF records directly into clean, standardized 5-column Excel (.xlsx) and CSV files with high accuracy.',
-  icons: {
-    icon: '/favicon.ico',
+    'Extract tabular bank statements, invoices, and credit card PDF records directly into clean, standardized 5-column Excel (.xlsx) and CSV files with 99.8% accuracy.',
+  keywords: [
+    'bank statement to excel',
+    'convert pdf statement to excel',
+    'bank statement converter',
+    'pdf to csv bank statement',
+    'ai statement parser',
+    'extract transactions from pdf',
+    'credit card statement converter',
+  ],
+  authors: [{ name: 'StatementToExcel' }],
+  creator: 'StatementToExcel',
+  openGraph: {
+    title: 'StatementToExcel - Bank Statement to Excel & CSV Converter',
+    description:
+      'Extract tabular bank statements, invoices, and credit card PDF records directly into clean, standardized 5-column Excel (.xlsx) and CSV files.',
+    url: 'https://statementtoexcel.com',
+    siteName: 'StatementToExcel',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'StatementToExcel - Bank Statement to Excel Converter',
+    description:
+      'Instant AI-powered bank statement and invoice conversion to clean Excel and CSV tables.',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

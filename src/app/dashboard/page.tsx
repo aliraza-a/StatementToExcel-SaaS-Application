@@ -269,82 +269,151 @@ export default function DashboardPage() {
               </Link>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead className="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400">
-                  <tr>
-                    <th className="py-3 px-4">Document</th>
-                    <th className="py-3 px-4">Pages</th>
-                    <th className="py-3 px-4">Transactions</th>
-                    <th className="py-3 px-4">Converted Date</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
-                  {conversions.map((c) => {
-                    const count = c.extracted_data?.transactions?.length || 0;
-                    const dateStr = new Date(c.created_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    });
+            <>
+              {/* Mobile Cards View (< md) */}
+              <div className="md:hidden divide-y divide-neutral-100 dark:divide-neutral-800">
+                {conversions.map((c) => {
+                  const count = c.extracted_data?.transactions?.length || 0;
+                  const dateStr = new Date(c.created_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  });
 
-                    return (
-                      <tr
-                        key={c.id}
-                        className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
-                      >
-                        <td className="py-3 px-4 font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                  return (
+                    <div key={c.id} className="p-4 space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 overflow-hidden">
                           <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
-                          <span className="truncate max-w-xs">{c.file_name}</span>
-                        </td>
-                        <td className="py-3 px-4 text-neutral-600 dark:text-neutral-400">
+                          <span className="font-semibold text-xs text-neutral-900 dark:text-white truncate">
+                            {c.file_name}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleDelete(c.id)}
+                          title="Delete Statement"
+                          className="p-1 rounded text-neutral-400 hover:text-red-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-[11px] text-neutral-500">
+                        <span className="px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 font-medium">
                           {c.page_count} {c.page_count === 1 ? 'page' : 'pages'}
-                        </td>
-                        <td className="py-3 px-4 font-mono text-neutral-600 dark:text-neutral-400">
-                          {count} rows
-                        </td>
-                        <td className="py-3 px-4 text-neutral-500">
-                          {dateStr}
-                        </td>
-                        <td className="py-3 px-4 text-right space-x-2">
-                          <button
-                            onClick={() => setSelectedConversion(c)}
-                            title="Preview & Edit"
-                            className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
-                          >
-                            <Eye className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDownloadCsv(c)}
-                            title="Download CSV"
-                            className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
-                          >
-                            <FileText className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDownloadExcel(c)}
-                            title="Download Excel (.xlsx)"
-                            className="p-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors"
-                          >
-                            <FileSpreadsheet className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(c.id)}
-                            title="Delete"
-                            className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        </span>
+                        <span>•</span>
+                        <span className="font-mono">{count} rows</span>
+                        <span>•</span>
+                        <span>{dateStr}</span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 pt-1">
+                        <button
+                          onClick={() => setSelectedConversion(c)}
+                          className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                        >
+                          <Eye className="h-3 w-3" />
+                          Preview
+                        </button>
+                        <button
+                          onClick={() => handleDownloadCsv(c)}
+                          className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                        >
+                          <FileText className="h-3 w-3" />
+                          CSV
+                        </button>
+                        <button
+                          onClick={() => handleDownloadExcel(c)}
+                          className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                        >
+                          <FileSpreadsheet className="h-3 w-3" />
+                          Excel
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Desktop Table View (>= md) */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead className="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400">
+                    <tr>
+                      <th className="py-3 px-4">Document</th>
+                      <th className="py-3 px-4">Pages</th>
+                      <th className="py-3 px-4">Transactions</th>
+                      <th className="py-3 px-4">Converted Date</th>
+                      <th className="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                    {conversions.map((c) => {
+                      const count = c.extracted_data?.transactions?.length || 0;
+                      const dateStr = new Date(c.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      });
+
+                      return (
+                        <tr
+                          key={c.id}
+                          className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                        >
+                          <td className="py-3 px-4 font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                            <span className="truncate max-w-xs">{c.file_name}</span>
+                          </td>
+                          <td className="py-3 px-4 text-neutral-600 dark:text-neutral-400">
+                            {c.page_count} {c.page_count === 1 ? 'page' : 'pages'}
+                          </td>
+                          <td className="py-3 px-4 font-mono text-neutral-600 dark:text-neutral-400">
+                            {count} rows
+                          </td>
+                          <td className="py-3 px-4 text-neutral-500">
+                            {dateStr}
+                          </td>
+                          <td className="py-3 px-4 text-right space-x-2">
+                            <button
+                              onClick={() => setSelectedConversion(c)}
+                              title="Preview & Edit"
+                              className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
+                            >
+                              <Eye className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDownloadCsv(c)}
+                              title="Download CSV"
+                              className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
+                            >
+                              <FileText className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDownloadExcel(c)}
+                              title="Download Excel (.xlsx)"
+                              className="p-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer"
+                            >
+                              <FileSpreadsheet className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(c.id)}
+                              title="Delete"
+                              className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </main>

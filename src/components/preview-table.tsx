@@ -158,10 +158,10 @@ export function PreviewTable({
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex items-center flex-wrap gap-2 w-full sm:w-auto">
           <button
             onClick={handleAddRow}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" />
             Add Row
@@ -169,24 +169,24 @@ export function PreviewTable({
 
           <button
             onClick={handleDownloadCsv}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
           >
             <FileText className="h-3.5 w-3.5 text-neutral-500" />
-            {downloadSuccess === 'csv' ? 'Downloaded!' : 'Download CSV'}
+            {downloadSuccess === 'csv' ? 'Downloaded!' : 'CSV'}
           </button>
 
           <button
             onClick={handleDownloadExcel}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/20 transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/20 transition-all cursor-pointer"
           >
             <FileSpreadsheet className="h-4 w-4" />
-            {downloadSuccess === 'xlsx' ? 'Downloaded!' : 'Download Excel (.xlsx)'}
+            {downloadSuccess === 'xlsx' ? 'Downloaded!' : 'Excel (.xlsx)'}
           </button>
 
           <button
             onClick={onReset}
             title="Convert Another Statement"
-            className="p-2 rounded-xl text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            className="p-2 rounded-xl text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             <RotateCcw className="h-4 w-4" />
           </button>
@@ -240,6 +240,11 @@ export function PreviewTable({
 
       {/* 5-Column Table */}
       <div className="overflow-hidden rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm">
+        {/* Mobile Horizontal Scroll Hint */}
+        <div className="sm:hidden px-3.5 py-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-800/50 border-b border-neutral-100 dark:border-neutral-800 flex items-center justify-between font-medium">
+          <span>Swipe horizontally to view all 5 columns</span>
+          <span className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Scroll &rarr;</span>
+        </div>
         <div className="overflow-x-auto max-h-[500px]">
           <table className="w-full text-left border-collapse text-xs">
             <thead className="sticky top-0 z-10 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-800 font-semibold text-neutral-600 dark:text-neutral-300">
@@ -375,7 +380,7 @@ export function PreviewTable({
                     <td className="py-2.5 px-2 text-center">
                       <button
                         onClick={() => handleDeleteRow(t.id!)}
-                        className="opacity-0 group-hover:opacity-100 p-1 rounded text-neutral-400 hover:text-red-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+                        className="opacity-60 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all cursor-pointer"
                         title="Delete Row"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

@@ -167,9 +167,70 @@ export function parseDigitalStatement(text: string): Transaction[] {
         balance,
       };
     } else if (currentTx) {
-      // Continuation line (multi-line description or transaction memo)
+      // Continuation line (multi-line description or wrapped amounts)
       const isHeaderLine = /^(date|description|details|narrative|withdrawal|deposit|balance)/i.test(rawLine);
       if (!isHeaderLine && rawLine.length > 1) {
+        // If currentTx didn't find amounts on the date line, check if they are on this line
+        if (currentTx.debit === null && currentTx.credit === null && currentTx.balance === null) {
+          const numberMatches = [...rawLine.matchAll(/(?:([+-]?)\s*[\$€£¥₹]?\s*(\(\s*[\d,]+\.?\d*\s*\)|[\d,]+\.\d{2})\s*(CR|DR)?)/gi)];
+          if (numberMatches.length > 0) {
+            const amountsFound = numberMatches.map(m => {
+              const fullToken = m[0].trim();
+              const isCR = /CR$/i.test(fullToken);
+              const isDR = /DR$/i.test(fullToken);
+              const isNeg = fullToken.startsWith('-') || /^\(.*\)$/.test(fullToken) || isDR;
+              return {
+                raw: fullToken,
+                num: parseAmount(fullToken) || 0,
+                isNegative: isNeg,
+                isCR,
+                isDR,
+              };
+            });
+
+            let memoDesc = rawLine;
+            for (const amt of amountsFound) {
+              memoDesc = memoDesc.replace(amt.raw, '');
+            }
+            memoDesc = memoDesc.replace(/\s+/g, ' ').trim();
+            if (memoDesc) {
+              currentTx.description = `${currentTx.description} ${memoDesc}`.trim();
+            }
+
+            if (amountsFound.length === 1) {
+              const amt = amountsFound[0];
+              if (amt.isNegative || amt.isDR || amt.num < 0 || DEBIT_WORDS_REGEX.test(currentTx.description)) {
+                currentTx.debit = Math.abs(amt.num);
+              } else if (amt.isCR || CREDIT_WORDS_REGEX.test(currentTx.description)) {
+                currentTx.credit = Math.abs(amt.num);
+              } else {
+                currentTx.debit = Math.abs(amt.num);
+              }
+            } else if (amountsFound.length === 2) {
+              const first = amountsFound[0];
+              const second = amountsFound[1];
+              currentTx.balance = second.num;
+
+              if (lastKnownBalance !== null) {
+                const delta = Math.round((second.num - lastKnownBalance) * 100) / 100;
+                if (delta < 0) currentTx.debit = Math.abs(first.num);
+                else if (delta > 0) currentTx.credit = Math.abs(first.num);
+              }
+
+              if (currentTx.debit === null && currentTx.credit === null) {
+                if (first.isNegative || first.isDR || first.num < 0 || DEBIT_WORDS_REGEX.test(currentTx.description)) {
+                  currentTx.debit = Math.abs(first.num);
+                } else if (first.isCR || CREDIT_WORDS_REGEX.test(currentTx.description)) {
+                  currentTx.credit = Math.abs(first.num);
+                } else {
+                  currentTx.debit = Math.abs(first.num);
+                }
+              }
+            }
+            continue;
+          }
+        }
+
         currentTx.description = `${currentTx.description} ${rawLine}`.trim();
       }
     }
