@@ -29,6 +29,8 @@ export function createClient() {
           },
         }),
         signOut: async () => ({ error: null }),
+        signUp: async () => ({ data: { user: null, session: null }, error: new Error('Supabase is not configured on this deployment yet.') }),
+        signInWithPassword: async () => ({ data: { user: null, session: null }, error: new Error('Supabase is not configured on this deployment yet.') }),
         signInWithOtp: async () => ({ error: new Error('Supabase is not configured on this deployment yet.') }),
         signInWithOAuth: async () => ({ error: new Error('Supabase is not configured on this deployment yet.') }),
       },
