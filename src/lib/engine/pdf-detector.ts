@@ -1,4 +1,4 @@
-import { PDFParse, PasswordException } from 'pdf-parse';
+import './pdf-polyfill';
 
 export interface PDFInspectionResult {
   isPasswordProtected: boolean;
@@ -18,8 +18,10 @@ export async function inspectPDF(
   buffer: Buffer,
   password?: string
 ): Promise<PDFInspectionResult> {
-  let parser: InstanceType<typeof PDFParse> | null = null;
+  let parser: any = null;
   try {
+    const { PDFParse, PasswordException } = await import('pdf-parse');
+
     parser = new PDFParse({
       data: buffer,
       password: password || undefined,
@@ -53,13 +55,11 @@ export async function inspectPDF(
       pageTexts,
     };
   } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
     const isPasswordError =
-      err instanceof PasswordException ||
-      (err instanceof Error && (
-        err.name === 'PasswordException' ||
-        err.message.toLowerCase().includes('password') ||
-        err.message.toLowerCase().includes('encrypted')
-      ));
+      (err as any)?.name === 'PasswordException' ||
+      message.toLowerCase().includes('password') ||
+      message.toLowerCase().includes('encrypted');
 
     if (isPasswordError) {
       return {
@@ -73,17 +73,14 @@ export async function inspectPDF(
       };
     }
 
-    const message = err instanceof Error ? err.message : String(err);
-    const isCorrupted = message.toLowerCase().includes('format') || message.toLowerCase().includes('corrupted') || message.toLowerCase().includes('invalid');
-
+    console.warn('Local PDF parse encountered an issue, falling back to Vision pipeline:', message);
+    // If local PDF parsing fails (e.g. serverless canvas missing or complex format), gracefully flag as scanned so Gemini Vision handles it seamlessly!
     return {
       isPasswordProtected: false,
       pageCount: 1,
-      isScanned: false,
+      isScanned: true,
       text: '',
       pageTexts: [],
-      error: isCorrupted ? 'The uploaded PDF appears corrupted or unreadable.' : `Failed to parse PDF: ${message}`,
-      errorCode: isCorrupted ? 'CORRUPTED_PDF' : 'UNKNOWN',
     };
   } finally {
     if (parser) {

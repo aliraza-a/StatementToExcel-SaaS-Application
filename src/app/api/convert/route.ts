@@ -1,3 +1,4 @@
+import '@/lib/engine/pdf-polyfill';
 import { NextRequest, NextResponse } from 'next/server';
 import { inspectPDF } from '@/lib/engine/pdf-detector';
 import { parseDigitalStatement } from '@/lib/engine/digital-parser';
