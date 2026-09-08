@@ -46,11 +46,11 @@ export default function Home() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setIsLoggedIn(!!data.user);
+    supabase.auth.getUser().then(({ data }: any) => {
+      setIsLoggedIn(!!data?.user);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setIsLoggedIn(!!session?.user);
     });
 
@@ -97,7 +97,13 @@ export default function Home() {
         body: JSON.stringify({ planId }),
       });
 
-      const data = await res.json();
+      const resText = await res.text();
+      let data: any;
+      try {
+        data = resText ? JSON.parse(resText) : {};
+      } catch {
+        throw new Error(`Server returned error (${res.status}): ${resText.slice(0, 100) || res.statusText}`);
+      }
       if (!res.ok) {
         throw new Error(data.error || 'Failed to initialize checkout.');
       }

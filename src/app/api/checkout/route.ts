@@ -7,6 +7,12 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient();
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase authentication is not configured on this deployment yet.' },
+        { status: 500 }
+      );
+    }
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

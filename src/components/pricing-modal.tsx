@@ -36,7 +36,13 @@ export function PricingModal({ isOpen, onClose, onRequireAuth }: PricingModalPro
         body: JSON.stringify({ planId }),
       });
 
-      const data = await res.json();
+      const resText = await res.text();
+      let data: any;
+      try {
+        data = resText ? JSON.parse(resText) : {};
+      } catch {
+        throw new Error(`Server returned error (${res.status}): ${resText.slice(0, 100) || res.statusText}`);
+      }
       if (!res.ok) {
         throw new Error(data.error || 'Unable to generate checkout session.');
       }

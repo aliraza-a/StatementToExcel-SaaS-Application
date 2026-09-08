@@ -7,6 +7,12 @@ export async function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
+  const isConfigured = supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('your-project-ref');
+
+  if (!isConfigured) {
+    return null;
+  }
+
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {

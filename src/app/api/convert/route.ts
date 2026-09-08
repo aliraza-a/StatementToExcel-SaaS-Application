@@ -60,14 +60,17 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Check Authentication & Credit Balances
-    let supabase;
+    let supabase = null;
     let user = null;
     try {
       supabase = await createClient();
-      const { data } = await supabase.auth.getUser();
-      user = data.user;
+      if (supabase) {
+        const { data } = await supabase.auth.getUser();
+        user = data?.user || null;
+      }
     } catch {
       user = null;
+      supabase = null;
     }
 
     if (user && supabase) {

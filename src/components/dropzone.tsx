@@ -81,7 +81,19 @@ export function Dropzone({
       clearTimeout(timer1);
       clearTimeout(timer2);
 
-      const data = await res.json();
+      const resText = await res.text();
+      let data: any;
+      try {
+        data = resText ? JSON.parse(resText) : {};
+      } catch {
+        if (res.status === 504) {
+          throw new Error('Conversion timed out on the server (15s serverless limit). For scanned files, please try a smaller document or fewer pages.');
+        }
+        if (res.status === 413) {
+          throw new Error('The PDF file exceeds the hosting provider upload limit (4.5MB on Vercel). Please upload a smaller file.');
+        }
+        throw new Error(`Server returned error (${res.status}): ${resText.slice(0, 150) || res.statusText}`);
+      }
 
       if (!res.ok || !data.success) {
         setIsProcessing(false);
