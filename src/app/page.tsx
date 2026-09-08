@@ -9,7 +9,7 @@ import { AuthModal } from '@/components/auth-modal';
 import { PricingModal } from '@/components/pricing-modal';
 import { PasswordModal } from '@/components/password-modal';
 import { ConversionResult } from '@/types/statement';
-import { PRICING_PLANS } from '@/lib/lemonsqueezy';
+import { PRICING_PLANS } from '@/lib/paddle';
 import { createClient } from '@/lib/supabase/client';
 import {
   FileSpreadsheet,

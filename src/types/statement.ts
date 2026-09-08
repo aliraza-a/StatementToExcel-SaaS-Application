@@ -34,5 +34,5 @@ export interface PricingPlan {
   credits: string;
   popular?: boolean;
   features: string[];
-  variantIdEnvKey: string;
+  priceIdEnvKey: string;
 }

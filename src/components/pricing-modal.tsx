@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { X, Check, Sparkles, Crown, Zap, ShieldCheck } from 'lucide-react';
-import { PRICING_PLANS } from '@/lib/lemonsqueezy';
+import { PRICING_PLANS } from '@/lib/paddle';
 import { createClient } from '@/lib/supabase/client';
 
 interface PricingModalProps {

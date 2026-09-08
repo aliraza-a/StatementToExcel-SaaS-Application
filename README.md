@@ -73,15 +73,16 @@ SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 # Get your free key at: https://aistudio.google.com/app/apikey
 GEMINI_API_KEY=your-gemini-api-key
 
-# Lemon Squeezy (Store Settings -> API & Webhooks)
-LEMONSQUEEZY_API_KEY=your-lemonsqueezy-api-key
-LEMONSQUEEZY_STORE_ID=your-lemonsqueezy-store-id
-LEMONSQUEEZY_WEBHOOK_SECRET=your-lemonsqueezy-webhook-secret
+# Paddle Billing (Developer Tools -> Authentication & Notifications)
+# Dashboard: https://vendors.paddle.com (Sandbox: https://sandbox-vendors.paddle.com)
+PADDLE_API_KEY=your-paddle-api-key
+PADDLE_WEBHOOK_SECRET=your-paddle-notification-secret
+PADDLE_ENVIRONMENT=sandbox # "sandbox" or "production"
 
-# Variant IDs from Lemon Squeezy Products:
-LEMONSQUEEZY_VARIANT_ONETIME=
-LEMONSQUEEZY_VARIANT_LIFETIME=
-LEMONSQUEEZY_VARIANT_PRO_MONTHLY=
+# Paddle Price IDs (Catalog -> Products -> Price -> Copy Price ID):
+PADDLE_PRICE_ID_ONETIME=pri_...
+PADDLE_PRICE_ID_LIFETIME=pri_...
+PADDLE_PRICE_ID_PRO_MONTHLY=pri_...
 
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
@@ -101,17 +102,17 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ---
 
-## 🍋 Lemon Squeezy Setup
+## 🛶 Paddle Billing Setup
 
-1. Create products in your [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com):
-   - **One-Time Pass** ($4.99)
-   - **Lifetime Deal** ($29)
-   - **Pro Monthly** ($15/mo)
-2. Copy the Variant ID for each product into `.env.local`.
-3. Go to **Settings -> Webhooks** -> **Add Webhook**:
-   - URL: `https://your-domain.com/api/webhooks/lemonsqueezy`
-   - Secret: Enter a secret string and match it in `LEMONSQUEEZY_WEBHOOK_SECRET`.
-   - Events: Check `order_created` and `subscription_created`.
+1. Create products in your [Paddle Dashboard](https://vendors.paddle.com) (or [Sandbox](https://sandbox-vendors.paddle.com)):
+   - **One-Time Pass** ($4.99 USD, one-time) -> Copy Price ID (`pri_...`) to `PADDLE_PRICE_ID_ONETIME`.
+   - **Lifetime Deal** ($29.00 USD, one-time) -> Copy Price ID (`pri_...`) to `PADDLE_PRICE_ID_LIFETIME`.
+   - **Pro Monthly** ($15.00 USD / month, recurring) -> Copy Price ID (`pri_...`) to `PADDLE_PRICE_ID_PRO_MONTHLY`.
+2. Generate an API Key in **Developer Tools -> Authentication -> New API Key** and set `PADDLE_API_KEY`.
+3. Set up a Webhook Destination in **Developer Tools -> Notifications -> New Destination**:
+   - URL: `https://your-domain.com/api/webhooks/paddle`
+   - Events: `transaction.completed`, `transaction.paid`, `subscription.activated`, `subscription.canceled`.
+   - Copy the Notification Secret Key (`pdl_ntf_set_...`) into `PADDLE_WEBHOOK_SECRET`.
 
 ---
 
