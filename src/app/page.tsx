@@ -445,7 +445,7 @@ export default function Home() {
             {/* Merchant Guarantee */}
             <div className="mt-12 text-center text-xs text-neutral-400 flex items-center justify-center gap-2">
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              <span>Payments securely processed by Lemon Squeezy (Merchant of Record). All major credit cards accepted.</span>
+              <span>Payments securely processed by Paddle (Merchant of Record). All major credit cards accepted.</span>
             </div>
           </div>
         </section>

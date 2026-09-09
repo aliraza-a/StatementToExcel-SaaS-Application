@@ -179,7 +179,7 @@ export function PricingModal({ isOpen, onClose, onRequireAuth }: PricingModalPro
         {/* Privacy Note */}
         <div className="mt-8 pt-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-center gap-2 text-xs text-neutral-400">
           <ShieldCheck className="h-4 w-4 text-emerald-600" />
-          <span>Secured by Lemon Squeezy (Merchant of Record). 30-day money-back guarantee.</span>
+          <span>Secured by Paddle (Merchant of Record). 30-day money-back guarantee.</span>
         </div>
       </div>
     </div>

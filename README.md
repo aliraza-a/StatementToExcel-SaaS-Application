@@ -2,7 +2,7 @@
 
 > **Convert Messy Bank Statements & Invoices into Clean Excel in 3 Seconds.**
 
-StatementToExcel is a full-stack, production-ready SaaS application built with **Next.js 15+ (App Router)**, **Tailwind CSS**, **Supabase (Auth & PostgreSQL RLS)**, and **Lemon Squeezy (Merchant of Record)**.
+StatementToExcel is a full-stack, production-ready SaaS application built with **Next.js 15+ (App Router)**, **Tailwind CSS**, **Supabase (Auth & PostgreSQL RLS)**, and **Paddle (Merchant of Record)**.
 
 It provides a dual extraction pipeline to convert tabular bank statements, credit card statements, and invoices into standardized 5-column spreadsheets (`Date`, `Description`, `Debit`, `Credit`, `Balance`).
 
@@ -39,9 +39,9 @@ It provides a dual extraction pipeline to convert tabular bank statements, credi
   - Minimalist ledger of past converted statements.
   - Live credits indicator and "Upgrade" CTA.
   - 1-Click re-download of `.xlsx` or `.csv`.
-- **Lemon Squeezy Integration**:
+- **Paddle Billing Integration**:
   - Hosted checkout session generation with custom `user_id` payload.
-  - Signed webhook listener (`/api/webhooks/lemonsqueezy`) verifying HMAC SHA-256 signatures.
+  - Signed webhook listener (`/api/webhooks/paddle`) verifying HMAC SHA-256 signatures.
 
 ---
 
@@ -91,14 +91,10 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ## 🗄️ Supabase Database Setup
 
+The database schema (`public.profiles`, `public.conversions`, `public.payments`), RLS policies, and triggers are already configured.
+
 1. Open your **[Supabase Dashboard](https://supabase.com/dashboard)**.
-2. Navigate to **SQL Editor** -> **New Query**.
-3. Copy and paste the contents of [`supabase/migrations/001_initial_schema.sql`](./supabase/migrations/001_initial_schema.sql).
-4. Click **Run**.
-   - This creates `public.profiles`, `public.conversions`, and `public.payments`.
-   - Enables Row Level Security (RLS) policies.
-   - Installs the trigger that grants 3 free credits to every new signup.
-5. In **Authentication -> URL Configuration**, ensure `http://localhost:3000/**` is added to **Redirect URLs**.
+2. In **Authentication -> URL Configuration**, ensure `http://localhost:3000/**` is added to **Redirect URLs**.
 
 ---
 
