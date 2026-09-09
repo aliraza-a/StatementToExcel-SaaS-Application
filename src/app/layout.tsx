@@ -13,9 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://statementtoexcel.com'),
   title: 'StatementToExcel - Convert Bank Statements to Excel & CSV in Seconds',
   description:
-    'Extract tabular bank statements, invoices, and credit card PDF records directly into clean, standardized 5-column Excel (.xlsx) and CSV files with 99.8% accuracy.',
+    'Extract tabular bank statements, invoices, and credit card PDF records directly into clean, standardized 5-column Excel (.xlsx) and CSV files with 99.8% accuracy using AI.',
   keywords: [
     'bank statement to excel',
     'convert pdf statement to excel',
@@ -24,9 +25,13 @@ export const metadata: Metadata = {
     'ai statement parser',
     'extract transactions from pdf',
     'credit card statement converter',
+    'finance automation',
+    'pdf to spreadsheet'
   ],
-  authors: [{ name: 'StatementToExcel' }],
+  authors: [{ name: 'StatementToExcel', url: 'https://statementtoexcel.com' }],
   creator: 'StatementToExcel',
+  publisher: 'StatementToExcel',
+  applicationName: 'StatementToExcel',
   openGraph: {
     title: 'StatementToExcel - Bank Statement to Excel & CSV Converter',
     description:
@@ -35,16 +40,36 @@ export const metadata: Metadata = {
     siteName: 'StatementToExcel',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png', // Fallback if no specific OG image is added yet
+        width: 1200,
+        height: 630,
+        alt: 'StatementToExcel Preview',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'StatementToExcel - Bank Statement to Excel Converter',
     description:
       'Instant AI-powered bank statement and invoice conversion to clean Excel and CSV tables.',
+    creator: '@statementtoexcel',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://statementtoexcel.com',
   },
 };
 

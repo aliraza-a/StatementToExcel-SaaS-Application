@@ -91,12 +91,12 @@ export async function POST(req: NextRequest) {
       const isPro = profile?.is_pro || false;
       const credits = profile?.credits_remaining ?? 3;
 
-      if (!isPro && credits <= 0) {
+      if (!isPro && credits < inspection.pageCount) {
         return NextResponse.json(
           {
             success: false,
             errorCode: 'INSUFFICIENT_CREDITS',
-            error: 'You have 0 credits remaining. Please upgrade your plan to continue.',
+            error: `You have ${credits} credits remaining, but this document requires ${inspection.pageCount} credits. Please upgrade your plan to continue.`,
           },
           { status: 403 }
         );
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
 
       // Deduct credits if not Pro (1 credit per page, minimum 1)
       if (!isPro) {
-        const cost = Math.min(inspection.pageCount, credits);
+        const cost = Math.max(1, inspection.pageCount);
         const newCredits = Math.max(0, credits - cost);
 
         await supabase

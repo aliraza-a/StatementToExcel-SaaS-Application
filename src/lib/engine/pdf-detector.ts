@@ -57,6 +57,23 @@ export async function inspectPDF(
       };
     }
 
+    const isInvalidPdf =
+      message.toLowerCase().includes('invalid pdf') ||
+      message.toLowerCase().includes('corrupted') ||
+      buffer.length === 0;
+
+    if (isInvalidPdf) {
+      return {
+        isPasswordProtected: false,
+        pageCount: 1,
+        isScanned: false,
+        text: '',
+        pageTexts: [],
+        error: 'The PDF file is corrupted or empty.',
+        errorCode: 'CORRUPTED_PDF',
+      };
+    }
+
     console.warn('Local PDF extraction falling back to Gemini Vision:', message);
     return {
       isPasswordProtected: false,
