@@ -73,6 +73,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { PaddleLoader } from '@/components/paddle-loader';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -81,6 +83,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+        <PaddleLoader />
         {children}
       </body>
     </html>
