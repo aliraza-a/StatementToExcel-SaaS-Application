@@ -1,25 +1,36 @@
 'use client';
 
-import Script from 'next/script';
+import { useEffect } from 'react';
+import { initializePaddle, Paddle } from '@paddle/paddle-js';
+
+// Create a global reference to easily access Paddle anywhere in the app
+declare global {
+  interface Window {
+    paddleInstance?: Paddle;
+  }
+}
 
 export function PaddleLoader() {
-  const environment = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT === 'sandbox' ? 'sandbox' : 'production';
-  const clientToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || '';
+  useEffect(() => {
+    const initPaddle = async () => {
+      const environment = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT === 'sandbox' ? 'sandbox' : 'production';
+      const clientToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
 
-  return (
-    <Script
-      src="https://cdn.paddle.com/paddle/v2/paddle.js"
-      strategy="afterInteractive"
-      onLoad={() => {
-        // @ts-expect-error Paddle is injected globally by the script
-        if (typeof window !== 'undefined' && window.Paddle) {
-          // @ts-expect-error Paddle is injected globally by the script
-          window.Paddle.Initialize({
-            environment,
-            token: clientToken,
-          });
-        }
-      }}
-    />
-  );
+      if (!clientToken) {
+        console.warn('Paddle client token is missing. Checkout will not work.');
+        return;
+      }
+
+      if (!window.paddleInstance) {
+        window.paddleInstance = await initializePaddle({
+          environment,
+          token: clientToken,
+        });
+      }
+    };
+
+    initPaddle();
+  }, []);
+
+  return null;
 }

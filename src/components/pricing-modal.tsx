@@ -47,14 +47,14 @@ export function PricingModal({ isOpen, onClose, onRequireAuth }: PricingModalPro
         throw new Error(data.error || 'Unable to generate checkout session.');
       }
 
-      if (data.transactionId && typeof window !== 'undefined' && (window as any).Paddle) {
-        (window as any).Paddle.Checkout.open({
+      if (data.transactionId && typeof window !== 'undefined' && window.paddleInstance) {
+        window.paddleInstance.Checkout.open({
           transactionId: data.transactionId,
         });
       } else if (data.url) {
         window.location.href = data.url;
       } else {
-        throw new Error('Unable to open checkout overlay.');
+        throw new Error('Unable to open checkout overlay. Paddle may not have loaded yet. Please try again.');
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Checkout failed.';
