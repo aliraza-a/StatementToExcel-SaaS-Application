@@ -116,7 +116,7 @@ export async function createPaddleCheckoutSession({
   userId: string;
   userEmail?: string;
   redirectUrl?: string;
-}): Promise<string> {
+}): Promise<{ checkoutUrl: string | null; transactionId: string }> {
   const apiKey = process.env.PADDLE_API_KEY;
   const isSandbox = (process.env.PADDLE_ENVIRONMENT || '').toLowerCase() === 'sandbox';
   const baseUrl = isSandbox ? 'https://sandbox-api.paddle.com' : 'https://api.paddle.com';
@@ -163,16 +163,12 @@ export async function createPaddleCheckoutSession({
     throw new Error(`Paddle Transaction Error: ${errorMsg}`);
   }
 
-  const checkoutUrl = json?.data?.checkout?.url;
-  if (!checkoutUrl) {
-    // If no direct URL, Paddle transactions can be opened via transaction ID in Paddle.js
-    const txnId = json?.data?.id;
-    if (txnId) {
-      // Fallback redirect URL format or return txnId
-      return `${baseUrl}/checkout/${txnId}`;
-    }
-    throw new Error('Paddle transaction did not return a checkout URL or ID.');
+  const checkoutUrl = json?.data?.checkout?.url || null;
+  const transactionId = json?.data?.id;
+
+  if (!transactionId) {
+    throw new Error('Paddle transaction did not return a valid ID.');
   }
 
-  return checkoutUrl;
+  return { checkoutUrl, transactionId };
 }

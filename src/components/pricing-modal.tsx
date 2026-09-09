@@ -47,8 +47,14 @@ export function PricingModal({ isOpen, onClose, onRequireAuth }: PricingModalPro
         throw new Error(data.error || 'Unable to generate checkout session.');
       }
 
-      if (data.url) {
+      if (data.transactionId && typeof window !== 'undefined' && (window as any).Paddle) {
+        (window as any).Paddle.Checkout.open({
+          transactionId: data.transactionId,
+        });
+      } else if (data.url) {
         window.location.href = data.url;
+      } else {
+        throw new Error('Unable to open checkout overlay.');
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Checkout failed.';

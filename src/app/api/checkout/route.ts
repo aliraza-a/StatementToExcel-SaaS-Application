@@ -44,13 +44,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const checkoutUrl = await createPaddleCheckoutSession({
+    const { checkoutUrl, transactionId } = await createPaddleCheckoutSession({
       priceId: String(priceId),
       userId: user.id,
       userEmail: user.email,
     });
 
-    return NextResponse.json({ url: checkoutUrl });
+    return NextResponse.json({ url: checkoutUrl, transactionId });
   } catch (err: unknown) {
     console.error('Checkout creation error:', err);
     const message = err instanceof Error ? err.message : 'Failed to create checkout session.';
