@@ -118,7 +118,8 @@ export async function createPaddleCheckoutSession({
   redirectUrl?: string;
 }): Promise<{ checkoutUrl: string | null; transactionId: string }> {
   const apiKey = process.env.PADDLE_API_KEY;
-  const isSandbox = (process.env.PADDLE_ENVIRONMENT || '').toLowerCase() === 'sandbox';
+  const envVar = process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || process.env.PADDLE_ENVIRONMENT || '';
+  const isSandbox = envVar.toLowerCase() === 'sandbox';
   const baseUrl = isSandbox ? 'https://sandbox-api.paddle.com' : 'https://api.paddle.com';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
